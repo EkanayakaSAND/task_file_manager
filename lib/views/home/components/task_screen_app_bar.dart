@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:task_file_manager/utils/constants.dart';
 
 class TaskScreenAppBar extends StatefulWidget {
   const TaskScreenAppBar({super.key, required this.drawerKey});
@@ -18,15 +19,15 @@ class _TaskScreenAppBarState extends State<TaskScreenAppBar>
 
   @override
   void initState() {
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(microseconds: 30000));
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(microseconds: 30000));
     super.initState();
   }
 
   @override
   void dispose() {
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(microseconds: 30000));
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(microseconds: 30000));
     super.dispose();
   }
 
@@ -75,6 +76,7 @@ class _TaskScreenAppBarState extends State<TaskScreenAppBar>
                 ),
                 onPressed: () {
                   // Remove all tasks from database
+                  noTaskWarning(context);
                 },
               ),
             ),

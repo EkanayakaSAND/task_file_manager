@@ -1,9 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:task_file_manager/data/hive_data_store.dart';
+import 'package:task_file_manager/models/task.dart';
 import 'package:task_file_manager/views/home/task_screen.dart';
-import 'package:task_file_manager/views/tasks/task_view.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  // Initialize hive DB
+  await Hive.initFlutter();
+
+  //Register hive adapter
+  Hive.registerAdapter<Task>(TaskAdapter());
+
+  // Open a box
+  Box box = await Hive.openBox<Task>(HiveDataStore.boxName);
+
+  // To delete task from previous day
+  // box.values.forEach((task) {
+  //   if (task.createdAtTime.day != DateTime.now().day) {
+  //     task.delete();
+  //   }
+  // });
+
+  runApp(BaseWidget(child: const MyApp()));
+}
+
+
+// The inherited widget provides us with a convenient way to pass data 
+// between widgets.
+class BaseWidget extends InheritedWidget {
+  BaseWidget({Key? key, required this.child}) : super(key: key, child: child);
+
+  final HiveDataStore dataStore = HiveDataStore();
+  final Widget child;
+
+  static BaseWidget of(BuildContext context) {
+    final base = context.dependOnInheritedWidgetOfExactType<BaseWidget>();
+    if (base != null) {
+      return base;
+    } else {
+      throw StateError('Could not find ancestor widget of type BaseWidget');
+    }
+  }
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return false;
+  }
 }
 
 class MyApp extends StatelessWidget {
