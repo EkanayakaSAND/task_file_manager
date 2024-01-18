@@ -6,9 +6,13 @@ class RepTextField extends StatelessWidget {
     super.key,
     required this.controller,
     this.isForDescription = false,
+    required this.onFieldSubmitted,
+    required this.onChanged,
   });
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final Function(String)? onFieldSubmitted;
+  final Function(String)? onChanged;
   final bool isForDescription;
 
   @override
@@ -38,8 +42,8 @@ class RepTextField extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.grey.shade300)),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey.shade300))),
-          onFieldSubmitted: (value) {},
-          onChanged: (value) {},
+          onFieldSubmitted: onFieldSubmitted,
+          onChanged: onChanged,
         ),
       ),
     );

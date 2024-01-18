@@ -14,7 +14,10 @@ class Fab extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, CupertinoPageRoute(
-          builder: (_) => TaskView()
+          builder: (_) => const TaskView(
+            titleTaskController: null, 
+            descriptionTaskController: null, 
+            task: null,)
           )
         );
       },

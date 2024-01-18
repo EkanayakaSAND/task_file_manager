@@ -11,6 +11,7 @@ import 'package:task_file_manager/views/home/components/fab.dart';
 import 'package:task_file_manager/views/home/components/slider_drawer.dart';
 import 'package:task_file_manager/views/home/components/task_screen_app_bar.dart';
 import 'package:task_file_manager/views/home/widget/task_widget.dart';
+import 'package:task_file_manager/models/task.dart';
 
 class TaskScreenView extends StatefulWidget {
   const TaskScreenView({super.key});
@@ -131,7 +132,16 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
                                 ),
                               ]),
                           key: Key(index.toString()),
-                          child: const TaskWidget());
+                          child: TaskWidget(
+                            task: Task(
+                              id: "1",
+                              title: "Home Task",
+                              subtitle: "Cleaning the room",
+                              createdAtTime: DateTime.now(),
+                              createdAtDate: DateTime.now(),
+                              isCompleted: false,)
+                            
+                          ));
                     })
 
                 // When task list is not empty

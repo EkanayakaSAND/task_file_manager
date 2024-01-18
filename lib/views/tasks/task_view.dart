@@ -1,19 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker_fork/flutter_cupertino_date_picker_fork.dart';
 import 'package:task_file_manager/extensions/space_exs.dart';
+import 'package:task_file_manager/main.dart';
 import 'package:task_file_manager/utils/app_strings.dart';
+import 'package:task_file_manager/utils/constants.dart';
 import 'package:task_file_manager/views/home/components/date_time_selection.dart';
 import 'package:task_file_manager/views/home/components/rep_textfield.dart';
 import 'package:task_file_manager/views/tasks/widgets/task_view_app_bar.dart';
+import 'package:task_file_manager/models/task.dart';
 
 class TaskView extends StatefulWidget {
-  const TaskView({super.key});
+  const TaskView({
+    super.key,
+    required this.titleTaskController,
+    required this.descriptionTaskController,
+    required this.task,
+  });
+
+  final TextEditingController? titleTaskController;
+  final TextEditingController? descriptionTaskController;
+  final Task? task;
 
   @override
   State<TaskView> createState() => _TaskViewState();
 }
 
 class _TaskViewState extends State<TaskView> {
+
+  var title;
+  var subtitle;
+  DateTime? time;
+  DateTime? date;
+
+  String showTime(DateTime? time){
+    if(widget.task?.createdAtTime == null){
+      if(time == null){
+        return DateFormat('hh:mm a').format(DateTime.now()).toString();
+      }else{
+        return DateFormat('hh:mm a').format(time).toString();
+      }
+    }else{
+      return DateFormat('hh:mm a').format(widget.task!.createdAtTime).toString();
+    }
+  }
+
+  String showDate(DateTime? date){
+    if(widget.task?.createdAtDate == null){
+      if(time == null){
+        return DateFormat.yMMMEd().format(DateTime.now()).toString();
+      }else{
+        return DateFormat.yMMMEd().format(date).toString();
+      }
+    }else{
+      return DateFormat.yMMMEd().format(widget.task!.createdAtDate).toString();
+    }
+  }
+
+
+  DateTime showDateAsDateTime(DateTime? date){
+    if(widget.task?.createdAtDate == null){
+      if(date == null){
+        return DateTime.now();
+      }else{
+        return date;
+      }
+    }else{
+      return widget.task!.createdAtDate;
+    }
+  }
+
+  //main functions for creating and updating tasks
+  dynamic isTaskAlreadyExistsUpdateOtherwiseCreate(){
+    if(widget.titleTaskController?.text != null &&
+    widget.descriptionTaskController?.text != null){
+      try{
+        widget.titleTaskController?.text = title;
+        widget.descriptionTaskController?.text = subtitle;
+
+        widget.task?.save();
+        /// TODO: pop page
+      }catch(e){
+        updateTaskWarning(context)
+      }
+    }else{
+      if(title != null && subtitle != null){
+        var task = Task.create(
+          title: title, 
+          subtitle: subtitle,
+          createdAtDate: date,
+          createdAtTime: time);
+          BaseWidget.of(context).dataStore.addTask(task: task);
+      }else{
+        emptyWarning(context);
+      }
+    }
+  }
+  // if any task already exists return true otherwise false
+  bool isTaskAlreadyExists(){
+    if(widget.titleTaskController?.text == null &&
+    widget.descriptionTaskController?.text == null){
+      return true;
+    }else{
+      return false;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -51,10 +141,15 @@ class _TaskViewState extends State<TaskView> {
 Widget _buildBottomSideButtons (){
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: isTaskAlreadyExists()?
+         MainAxisAlignment.center: 
+         MainAxisAlignment.spaceEvenly,
         children: [
+          isTaskAlreadyExists()
+          ?Container()
+          :
           // Delete Current Task Button
           MaterialButton(
             onPressed: () {
@@ -83,7 +178,9 @@ Widget _buildBottomSideButtons (){
     
           //Add of Update Task
           MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              isTaskAlreadyExistsUpdateOtherwiseCreate();
+            },
             minWidth: 150,
             height: 55,
             color: Colors.white,
@@ -102,9 +199,7 @@ Widget _buildBottomSideButtons (){
 
 // Main Task Activity
 Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
-  final TextEditingController titleTaskController = TextEditingController();
-  final TextEditingController descriptionTaskController =
-      TextEditingController();
+  
   return SizedBox(
     width: double.infinity,
     height: 430,
@@ -120,13 +215,25 @@ Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
         ),
 
         // Task Title
-        RepTextField(controller: titleTaskController),
+        RepTextField(controller: widget.titleTaskController, 
+        onFieldSubmitted: (String inputTitle ) {
+          title = inputTitle;
+          },
+        onChanged: (String inputTitle) {
+          title = inputTitle;
+        },),
 
         10.h,
 
         // Description
         RepTextField(
-          controller: descriptionTaskController,
+          controller: widget.descriptionTaskController,
+          onChanged: (String inputSubtitle) {
+            subtitle = inputSubtitle;
+          },
+          onFieldSubmitted: (String inputSubtitle) {
+            subtitle = inputSubtitle;
+          },
           isForDescription: true,
         ),
 
@@ -139,12 +246,21 @@ Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
                       height: 280,
                       child: TimePickerWidget(
                         onChange: (_, __) {},
+                        initDateTime: showDateAsDateTime(time),
                         dateFormat: 'HH:mm',
-                        onConfirm: (dateTime, _) {},
+                        onConfirm: (dateTime, _) {
+                          setState((){
+                            if(widget.task?.createdAtTime == null){
+                              time = dateTime;
+                            }else{
+                              widget.task!.createdAtTime = dateTime;
+                            }
+                          });
+                        },
                       ),
                     ));
           },
-          title: AppString.timeString,
+          title: "Title", time: time.toString(),
         ),
 
         // Date Selection
@@ -154,10 +270,11 @@ Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
               context,
               maxDateTime: DateTime(2030, 9, 9),
               minDateTime: DateTime.now(),
+              initialDateTime: showDateAsDateTime(date),
               onConfirm: (dateTime, _) {},
             );
           },
-          title: AppString.dateString,
+          title: AppString.dateString, isTime : true ,  time: showDate(date),
         )
       ],
     ),
@@ -181,7 +298,7 @@ Widget _buildTopSideTexts(TextTheme textTheme) {
         ),
         RichText(
             text: TextSpan(
-                text: AppString.addNewTask,
+                text: isTaskAlreadyExists? AppString.addNewTask :AppString.updateCurrentTask,
                 style: textTheme.titleLarge,
                 children: const [
               TextSpan(
