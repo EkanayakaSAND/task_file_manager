@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ftoast/ftoast.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
+import 'package:task_file_manager/main.dart';
 import 'package:task_file_manager/utils/app_strings.dart';
 
 String lottieURL = 'assets/lottie/Animation.json';
@@ -33,4 +34,19 @@ dynamic noTaskWarning(BuildContext context) {
       buttonText: "Okay", onTapDismiss: () {
     Navigator.pop(context);
   }, panaraDialogType: PanaraDialogType.warning);
+}
+
+// Delete all tasks from DB warning
+dynamic deleteAllTask(BuildContext context) {
+  return PanaraConfirmDialog.show(context,
+      title: AppString.areYouSure,
+      message: 'Do you really want to delete all tasks?',
+      confirmButtonText: "Yes",
+      cancelButtonText: "No", onTapConfirm: () {
+    //BaseWidget.of(context).dataStore.box.clear();
+    Navigator.pop(context);
+  }, onTapCancel: () {
+    Navigator.pop(context);
+  }, panaraDialogType: PanaraDialogType.error,
+  barrierDismissible: false);
 }

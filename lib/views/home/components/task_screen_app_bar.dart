@@ -76,7 +76,7 @@ class _TaskScreenAppBarState extends State<TaskScreenAppBar>
                 ),
                 onPressed: () {
                   // Remove all tasks from database
-                  noTaskWarning(context);
+                  deleteAllTask(context);
                 },
               ),
             ),
