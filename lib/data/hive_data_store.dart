@@ -25,9 +25,10 @@ class HiveDataStore {
   }
 
   /// Delete task
-  Future<void> dalateTask({required Task task}) async {
+  Future<void> deleteTask({required Task task}) async {
     await task.delete();
   }
+
 
   ValueListenable<Box<Task>> listenToTask() {
     return box.listenable();

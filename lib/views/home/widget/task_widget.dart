@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_file_manager/utils/app_colors.dart';
 import 'package:task_file_manager/models/task.dart';
+import 'package:task_file_manager/views/tasks/task_view.dart';
 
 class TaskWidget extends StatefulWidget {
   const TaskWidget({
@@ -36,7 +38,17 @@ class _TaskWidgetState extends State<TaskWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+          builder: (ctx)=> TaskView(
+            titleTaskController: textEditingControllerForTitle,
+            descriptionTaskController: textEditingControllerForSubTitle,
+            task: widget.task,
+          )
+          ));
+      },
       //Main Card
       child: AnimatedContainer(
         margin: const EdgeInsets.symmetric(
@@ -56,7 +68,8 @@ class _TaskWidgetState extends State<TaskWidget> {
         child: ListTile(
           leading: GestureDetector(
             onTap: () {
-              // Check or Uncheck task
+              widget.task.isCompleted = !widget.task.isCompleted;
+              widget.task.save();              // Check or Uncheck task
             },
             child: AnimatedContainer(
               duration: const Duration(microseconds: 600),

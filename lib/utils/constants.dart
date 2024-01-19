@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ftoast/ftoast.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:task_file_manager/utils/app_strings.dart';
+import 'package:task_file_manager/main.dart';
 
 String lottieURL = 'assets/lottie/Animation.json';
 
@@ -42,7 +43,7 @@ dynamic deleteAllTask(BuildContext context) {
       message: 'Do you really want to delete all tasks?',
       confirmButtonText: "Yes",
       cancelButtonText: "No", onTapConfirm: () {
-    //BaseWidget.of(context).dataStore.box.clear();
+    BaseWidget.of(context).dataStore.box.clear();
     Navigator.pop(context);
   }, onTapCancel: () {
     Navigator.pop(context);

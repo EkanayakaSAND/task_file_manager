@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:task_file_manager/utils/constants.dart';
+import 'package:task_file_manager/main.dart';
 
 class TaskScreenAppBar extends StatefulWidget {
   const TaskScreenAppBar({super.key, required this.drawerKey});
@@ -47,6 +48,8 @@ class _TaskScreenAppBarState extends State<TaskScreenAppBar>
 
   @override
   Widget build(BuildContext context) {
+
+    var base = BaseWidget.of(context).dataStore.box;
     return SizedBox(
       width: double.infinity,
       height: 130,
@@ -76,7 +79,10 @@ class _TaskScreenAppBarState extends State<TaskScreenAppBar>
                 ),
                 onPressed: () {
                   // Remove all tasks from database
-                  deleteAllTask(context);
+                  //deleteAllTask(context);
+                  base.isEmpty
+                    ?noTaskWarning(context)
+                    :deleteAllTask(context);
                 },
               ),
             ),

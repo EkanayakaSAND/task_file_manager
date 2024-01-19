@@ -82,7 +82,7 @@ class _TaskViewState extends State<TaskView> {
 
         widget.task?.save();
 
-        /// TODO: pop page
+       Navigator.pop(context); 
       } catch (e) {
         updateTaskWarning(context);
       }
@@ -94,10 +94,16 @@ class _TaskViewState extends State<TaskView> {
             createdAtDate: date,
             createdAtTime: time);
         BaseWidget.of(context).dataStore.addTask(task: task);
+        Navigator.pop(context);
       } else {
         emptyWarning(context);
       }
     }
+  }
+
+  //delete tasks
+  dynamic deleteTask(){
+    return widget.task?.delete();
   }
 
   // if any task already exists return true otherwise false
@@ -156,7 +162,10 @@ class _TaskViewState extends State<TaskView> {
               :
               // Delete Current Task Button
               MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteTask();
+                    Navigator.pop(context);
+                  },
                   minWidth: 150,
                   height: 55,
                   color: Colors.white,
@@ -190,7 +199,9 @@ class _TaskViewState extends State<TaskView> {
               borderRadius: BorderRadius.circular(15),
             ),
             child: Text(
-              AppString.addNewTask,
+              isTaskAlreadyExists()
+              ?AppString.addTask
+              :AppString.updateTask,
               style: TextStyle(color: Colors.blue[700]),
             ),
           ),

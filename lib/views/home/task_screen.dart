@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:task_file_manager/extensions/space_exs.dart';
+import 'package:task_file_manager/main.dart';
 import 'package:task_file_manager/utils/app_colors.dart';
 import 'package:task_file_manager/utils/app_strings.dart';
 import 'package:task_file_manager/utils/constants.dart';
@@ -22,13 +24,40 @@ class TaskScreenView extends StatefulWidget {
 
 class _TaskScreenViewState extends State<TaskScreenView> {
   GlobalKey<SliderDrawerState> drawerKey = GlobalKey<SliderDrawerState>();
-  final List<int> testing = [];
+
+  //check value for circle indicator
+  dynamic valueOfIndicator(List<Task> task){
+    if(task.isNotEmpty){
+      return task.length;
+    }else{
+      return 3;
+    }
+  }
+  
+  //check done task
+  int checkDoneTask(List<Task> tasks){
+    int i = 0;
+    for (Task doneTask in tasks){
+      if(doneTask.isCompleted){
+        i++;
+      }
+    }
+    return i;
+  }
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
+    final base = BaseWidget.of(context);
+
+    return ValueListenableBuilder(
+      valueListenable: base.dataStore.listenToTask(), 
+      builder:(ctx, Box<Task> box, Widget? child){
+        var tasks = box.values.toList();
+
+        tasks.sort((a,b) => a.createdAtDate.compareTo(b.createdAtDate));
+        return Scaffold(
         backgroundColor: Colors.white,
         floatingActionButton: Fab(),
         body: SliderDrawer(
@@ -38,13 +67,19 @@ class _TaskScreenViewState extends State<TaskScreenView> {
 
           slider: CustomDrawer(),
           appBar: TaskScreenAppBar(drawerKey: drawerKey,),
-          child: _buildTaskScreenBody(textTheme),
+          child: _buildTaskScreenBody(
+            textTheme,
+            base,
+            tasks),
         ));
+      });
   }
-}
 
-Widget _buildTaskScreenBody(TextTheme textTheme) {
-  List<int> testing = [];
+
+Widget _buildTaskScreenBody(
+  TextTheme textTheme,
+  BaseWidget base,
+  List<Task> tasks) {
 
   return SizedBox(
     width: double.infinity,
@@ -62,13 +97,13 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Progress Indicator
-              const SizedBox(
+              SizedBox(
                 width: 30,
                 height: 30,
                 child: CircularProgressIndicator(
-                  value: 1 / 3,
+                  value: checkDoneTask(tasks) / valueOfIndicator(tasks),
                   backgroundColor: Colors.grey,
-                  valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
+                  valueColor: const AlwaysStoppedAnimation(AppColors.primaryColor),
                 ),
               ),
 
@@ -86,7 +121,7 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
                   ),
                   3.h,
                   Text(
-                    "1 of 3 tasks",
+                    "${checkDoneTask(tasks)} of ${tasks.length} tasks",
                     style: textTheme.titleMedium,
                   )
                 ],
@@ -108,16 +143,20 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
         SizedBox(
             width: double.infinity,
             height: 467,
-            child: testing.isNotEmpty
+            child: tasks.isNotEmpty
 
                 // When task list is not empty
                 ? ListView.builder(
-                    itemCount: testing.length,
+                    itemCount: tasks.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
+                      // get single task for showing in list
+                      var task = tasks[index];
                       return Dismissible(
                           direction: DismissDirection.horizontal,
-                          onDismissed: (_) {},
+                          onDismissed: (_) {
+                            base.dataStore.deleteTask(task: task);
+                          },
                           background: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -131,17 +170,11 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ]),
-                          key: Key(index.toString()),
+                          key: Key(task.id),
                           child: TaskWidget(
-                            task: Task(
-                              id: "1",
-                              title: "Home Task",
-                              subtitle: "Cleaning the room",
-                              createdAtTime: DateTime.now(),
-                              createdAtDate: DateTime.now(),
-                              isCompleted: false,)
-                            
-                          ));
+                            task:task
+                            ),
+                      );
                     })
 
                 // When task list is empty
@@ -154,7 +187,7 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
                           width: 200,
                           height: 200,
                           child: Lottie.asset(lottieURL,
-                              animate: testing.isNotEmpty ? false : true),
+                              animate: tasks.isNotEmpty ? false : true),
                         ),
                       ),
 
@@ -170,4 +203,5 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
       ],
     ),
   );
+}
 }
