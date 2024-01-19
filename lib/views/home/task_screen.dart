@@ -144,7 +144,7 @@ Widget _buildTaskScreenBody(TextTheme textTheme) {
                           ));
                     })
 
-                // When task list is not empty
+                // When task list is empty
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

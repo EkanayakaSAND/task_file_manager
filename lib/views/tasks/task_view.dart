@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_cupertino_date_picker_fork/flutter_cupertino_date_picker_fork.dart';
 import 'package:task_file_manager/extensions/space_exs.dart';
 import 'package:task_file_manager/main.dart';
@@ -26,84 +27,87 @@ class TaskView extends StatefulWidget {
 }
 
 class _TaskViewState extends State<TaskView> {
-
   var title;
   var subtitle;
   DateTime? time;
   DateTime? date;
 
-  String showTime(DateTime? time){
-    if(widget.task?.createdAtTime == null){
-      if(time == null){
+  String showTime(DateTime? time) {
+    if (widget.task?.createdAtTime == null) {
+      if (time == null) {
         return DateFormat('hh:mm a').format(DateTime.now()).toString();
-      }else{
+      } else {
         return DateFormat('hh:mm a').format(time).toString();
       }
-    }else{
-      return DateFormat('hh:mm a').format(widget.task!.createdAtTime).toString();
+    } else {
+      return DateFormat('hh:mm a')
+          .format(widget.task!.createdAtTime)
+          .toString();
     }
   }
 
-  String showDate(DateTime? date){
-    if(widget.task?.createdAtDate == null){
-      if(time == null){
+  String showDate(DateTime? date) {
+    if (widget.task?.createdAtDate == null) {
+      if (time == null) {
         return DateFormat.yMMMEd().format(DateTime.now()).toString();
-      }else{
-        return DateFormat.yMMMEd().format(date).toString();
+      } else {
+        return DateFormat.yMMMEd().format(date!).toString();
       }
-    }else{
+    } else {
       return DateFormat.yMMMEd().format(widget.task!.createdAtDate).toString();
     }
   }
 
-
-  DateTime showDateAsDateTime(DateTime? date){
-    if(widget.task?.createdAtDate == null){
-      if(date == null){
+  DateTime showDateAsDateTime(DateTime? date) {
+    if (widget.task?.createdAtDate == null) {
+      if (date == null) {
         return DateTime.now();
-      }else{
+      } else {
         return date;
       }
-    }else{
+    } else {
       return widget.task!.createdAtDate;
     }
   }
 
   //main functions for creating and updating tasks
-  dynamic isTaskAlreadyExistsUpdateOtherwiseCreate(){
-    if(widget.titleTaskController?.text != null &&
-    widget.descriptionTaskController?.text != null){
-      try{
+  dynamic isTaskAlreadyExistsUpdateOtherwiseCreate() {
+    if (widget.titleTaskController?.text != null &&
+        widget.descriptionTaskController?.text != null) {
+      try {
         widget.titleTaskController?.text = title;
         widget.descriptionTaskController?.text = subtitle;
 
         widget.task?.save();
+
         /// TODO: pop page
-      }catch(e){
-        updateTaskWarning(context)
+      } catch (e) {
+        updateTaskWarning(context);
       }
-    }else{
-      if(title != null && subtitle != null){
+    } else {
+      if (title != null && subtitle != null) {
         var task = Task.create(
-          title: title, 
-          subtitle: subtitle,
-          createdAtDate: date,
-          createdAtTime: time);
-          BaseWidget.of(context).dataStore.addTask(task: task);
-      }else{
+            title: title,
+            subtitle: subtitle,
+            createdAtDate: date,
+            createdAtTime: time);
+        BaseWidget.of(context).dataStore.addTask(task: task);
+      } else {
         emptyWarning(context);
       }
     }
   }
+
   // if any task already exists return true otherwise false
-  bool isTaskAlreadyExists(){
-    if(widget.titleTaskController?.text == null &&
-    widget.descriptionTaskController?.text == null){
+  bool isTaskAlreadyExists() {
+    if (widget.titleTaskController?.text == null &&
+        widget.descriptionTaskController?.text == null) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -135,71 +139,66 @@ class _TaskViewState extends State<TaskView> {
       ),
     );
   }
+
+  // Bottom Side Buttons
+Widget _buildBottomSideButtons() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 20),
+    child: Row(
+      mainAxisAlignment: isTaskAlreadyExists()
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.spaceEvenly,
+      children: [
+        isTaskAlreadyExists()
+            ? Container()
+            :
+            // Delete Current Task Button
+            MaterialButton(
+                onPressed: () {},
+                minWidth: 150,
+                height: 55,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),
+                    5.w,
+                    const Text(
+                      AppString.deleteTask,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
+              ),
+
+        //Add of Update Task
+        MaterialButton(
+          onPressed: () {
+            isTaskAlreadyExistsUpdateOtherwiseCreate();
+          },
+          minWidth: 150,
+          height: 55,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Text(
+            AppString.addNewTask,
+            style: TextStyle(color: Colors.blue[700]),
+          ),
+        ),
+      ],
+    ),
+  );
 }
-
-// Bottom Side Buttons
-Widget _buildBottomSideButtons (){
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        mainAxisAlignment: isTaskAlreadyExists()?
-         MainAxisAlignment.center: 
-         MainAxisAlignment.spaceEvenly,
-        children: [
-          isTaskAlreadyExists()
-          ?Container()
-          :
-          // Delete Current Task Button
-          MaterialButton(
-            onPressed: () {
-              
-            },
-            minWidth: 150,
-            height: 55,
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.close,
-                  color: Colors.red,
-                ),
-                5.w,
-                const Text(
-                  AppString.deleteTask,
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-            ),
-          ),
-    
-          //Add of Update Task
-          MaterialButton(
-            onPressed: () {
-              isTaskAlreadyExistsUpdateOtherwiseCreate();
-            },
-            minWidth: 150,
-            height: 55,
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Text(
-              AppString.addNewTask,
-              style: TextStyle(color: Colors.blue[700]),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 // Main Task Activity
 Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
-  
   return SizedBox(
     width: double.infinity,
     height: 430,
@@ -215,13 +214,15 @@ Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
         ),
 
         // Task Title
-        RepTextField(controller: widget.titleTaskController, 
-        onFieldSubmitted: (String inputTitle ) {
-          title = inputTitle;
+        RepTextField(
+          controller: widget.titleTaskController,
+          onFieldSubmitted: (String inputTitle) {
+            title = inputTitle;
           },
-        onChanged: (String inputTitle) {
-          title = inputTitle;
-        },),
+          onChanged: (String inputTitle) {
+            title = inputTitle;
+          },
+        ),
 
         10.h,
 
@@ -249,10 +250,10 @@ Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
                         initDateTime: showDateAsDateTime(time),
                         dateFormat: 'HH:mm',
                         onConfirm: (dateTime, _) {
-                          setState((){
-                            if(widget.task?.createdAtTime == null){
+                          setState(() {
+                            if (widget.task?.createdAtTime == null) {
                               time = dateTime;
-                            }else{
+                            } else {
                               widget.task!.createdAtTime = dateTime;
                             }
                           });
@@ -260,7 +261,8 @@ Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
                       ),
                     ));
           },
-          title: "Title", time: time.toString(),
+          title: "Title",
+          time: time.toString(),
         ),
 
         // Date Selection
@@ -274,7 +276,9 @@ Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
               onConfirm: (dateTime, _) {},
             );
           },
-          title: AppString.dateString, isTime : true ,  time: showDate(date),
+          title: AppString.dateString,
+          isTime: true,
+          time: showDate(date),
         )
       ],
     ),
@@ -298,7 +302,9 @@ Widget _buildTopSideTexts(TextTheme textTheme) {
         ),
         RichText(
             text: TextSpan(
-                text: isTaskAlreadyExists? AppString.addNewTask :AppString.updateCurrentTask,
+                text: isTaskAlreadyExists()
+                    ? AppString.addNewTask
+                    : AppString.updateCurrentTask,
                 style: textTheme.titleLarge,
                 children: const [
               TextSpan(
@@ -314,4 +320,6 @@ Widget _buildTopSideTexts(TextTheme textTheme) {
       ],
     ),
   );
+}
+
 }

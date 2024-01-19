@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ftoast/ftoast.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
-import 'package:task_file_manager/main.dart';
 import 'package:task_file_manager/utils/app_strings.dart';
 
 String lottieURL = 'assets/lottie/Animation.json';
