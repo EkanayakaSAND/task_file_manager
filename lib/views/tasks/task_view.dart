@@ -32,6 +32,7 @@ class _TaskViewState extends State<TaskView> {
   DateTime? time;
   DateTime? date;
 
+  // Show seleted time as String
   String showTime(DateTime? time) {
     if (widget.task?.createdAtTime == null) {
       if (time == null) {
@@ -141,185 +142,192 @@ class _TaskViewState extends State<TaskView> {
   }
 
   // Bottom Side Buttons
-Widget _buildBottomSideButtons() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 20),
-    child: Row(
-      mainAxisAlignment: isTaskAlreadyExists()
-          ? MainAxisAlignment.center
-          : MainAxisAlignment.spaceEvenly,
-      children: [
-        isTaskAlreadyExists()
-            ? Container()
-            :
-            // Delete Current Task Button
-            MaterialButton(
-                onPressed: () {},
-                minWidth: 150,
-                height: 55,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+  Widget _buildBottomSideButtons() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        mainAxisAlignment: isTaskAlreadyExists()
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.spaceEvenly,
+        children: [
+          isTaskAlreadyExists()
+              ? Container()
+              :
+              // Delete Current Task Button
+              MaterialButton(
+                  onPressed: () {},
+                  minWidth: 150,
+                  height: 55,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+                      5.w,
+                      const Text(
+                        AppString.deleteTask,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ),
-                    5.w,
-                    const Text(
-                      AppString.deleteTask,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ],
-                ),
-              ),
 
-        //Add of Update Task
-        MaterialButton(
-          onPressed: () {
-            isTaskAlreadyExistsUpdateOtherwiseCreate();
-          },
-          minWidth: 150,
-          height: 55,
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+          //Add of Update Task
+          MaterialButton(
+            onPressed: () {
+              isTaskAlreadyExistsUpdateOtherwiseCreate();
+            },
+            minWidth: 150,
+            height: 55,
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Text(
+              AppString.addNewTask,
+              style: TextStyle(color: Colors.blue[700]),
+            ),
           ),
-          child: Text(
-            AppString.addNewTask,
-            style: TextStyle(color: Colors.blue[700]),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
 // Main Task Activity
-Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
-  return SizedBox(
-    width: double.infinity,
-    height: 430,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 30),
-          child: Text(
-            AppString.titleOfTitleTextField,
-            style: textTheme.headlineMedium,
+  Widget _buildMainTaskViewActivity(TextTheme textTheme, BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 430,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30),
+            child: Text(
+              AppString.titleOfTitleTextField,
+              style: textTheme.headlineMedium,
+            ),
           ),
-        ),
 
-        // Task Title
-        RepTextField(
-          controller: widget.titleTaskController,
-          onFieldSubmitted: (String inputTitle) {
-            title = inputTitle;
-          },
-          onChanged: (String inputTitle) {
-            title = inputTitle;
-          },
-        ),
+          // Task Title
+          RepTextField(
+            controller: widget.titleTaskController,
+            onFieldSubmitted: (String inputTitle) {
+              title = inputTitle;
+            },
+            onChanged: (String inputTitle) {
+              title = inputTitle;
+            },
+          ),
 
-        10.h,
+          10.h,
 
-        // Description
-        RepTextField(
-          controller: widget.descriptionTaskController,
-          onChanged: (String inputSubtitle) {
-            subtitle = inputSubtitle;
-          },
-          onFieldSubmitted: (String inputSubtitle) {
-            subtitle = inputSubtitle;
-          },
-          isForDescription: true,
-        ),
+          // Description
+          RepTextField(
+            controller: widget.descriptionTaskController,
+            onChanged: (String inputSubtitle) {
+              subtitle = inputSubtitle;
+            },
+            onFieldSubmitted: (String inputSubtitle) {
+              subtitle = inputSubtitle;
+            },
+            isForDescription: true,
+          ),
 
-        // Time Selection
-        DateTimeSelectionWidget(
-          ontTap: () {
-            showModalBottomSheet(
-                context: context,
-                builder: (_) => SizedBox(
-                      height: 280,
-                      child: TimePickerWidget(
-                        onChange: (_, __) {},
-                        initDateTime: showDateAsDateTime(time),
-                        dateFormat: 'HH:mm',
-                        onConfirm: (dateTime, _) {
-                          setState(() {
-                            if (widget.task?.createdAtTime == null) {
-                              time = dateTime;
-                            } else {
-                              widget.task!.createdAtTime = dateTime;
-                            }
-                          });
-                        },
-                      ),
-                    ));
-          },
-          title: "Title",
-          time: time.toString(),
-        ),
+          // Time Selection
+          DateTimeSelectionWidget(
+            ontTap: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (_) => SizedBox(
+                        height: 280,
+                        child: TimePickerWidget(
+                          onChange: (_, __) {},
+                          initDateTime: showDateAsDateTime(time),
+                          dateFormat: 'HH:mm',
+                          onConfirm: (dateTime, _) {
+                            setState(() {
+                              if (widget.task?.createdAtTime == null) {
+                                time = dateTime;
+                              } else {
+                                widget.task!.createdAtTime = dateTime;
+                              }
+                            });
+                          },
+                        ),
+                      ));
+            },
+            title: "Time",
+            time: showTime(time),
+          ),
 
-        // Date Selection
-        DateTimeSelectionWidget(
-          ontTap: () {
-            DatePicker.showDatePicker(
-              context,
-              maxDateTime: DateTime(2030, 9, 9),
-              minDateTime: DateTime.now(),
-              initialDateTime: showDateAsDateTime(date),
-              onConfirm: (dateTime, _) {},
-            );
-          },
-          title: AppString.dateString,
-          isTime: true,
-          time: showDate(date),
-        )
-      ],
-    ),
-  );
-}
+          // Date Selection
+          DateTimeSelectionWidget(
+            ontTap: () {
+              DatePicker.showDatePicker(
+                context,
+                maxDateTime: DateTime(2030, 9, 9),
+                minDateTime: DateTime.now(),
+                initialDateTime: showDateAsDateTime(date),
+                onConfirm: (dateTime, _) {
+                  setState(() {
+                    if (widget.task?.createdAtDate == null) {
+                      time = dateTime;
+                    } else {
+                      widget.task!.createdAtDate = dateTime;
+                    }
+                  });
+                },
+              );
+            },
+            title: AppString.dateString,
+            isTime: true,
+            time: showDate(date),
+          )
+        ],
+      ),
+    );
+  }
 
 // Top Side Texts
-Widget _buildTopSideTexts(TextTheme textTheme) {
-  return SizedBox(
-    width: double.infinity,
-    height: 100,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(
-          width: 70,
-          child: Divider(
-            thickness: 2,
+  Widget _buildTopSideTexts(TextTheme textTheme) {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 70,
+            child: Divider(
+              thickness: 2,
+            ),
           ),
-        ),
-        RichText(
-            text: TextSpan(
-                text: isTaskAlreadyExists()
-                    ? AppString.addNewTask
-                    : AppString.updateCurrentTask,
-                style: textTheme.titleLarge,
-                children: const [
-              TextSpan(
-                  text: AppString.taskStrnig,
-                  style: TextStyle(fontWeight: FontWeight.w400))
-            ])),
-        const SizedBox(
-          width: 70,
-          child: Divider(
-            thickness: 2,
+          RichText(
+              text: TextSpan(
+                  text: isTaskAlreadyExists()
+                      ? AppString.addNewTask
+                      : AppString.updateCurrentTask,
+                  style: textTheme.titleLarge,
+                  children: const [
+                TextSpan(
+                    text: AppString.taskStrnig,
+                    style: TextStyle(fontWeight: FontWeight.w400))
+              ])),
+          const SizedBox(
+            width: 70,
+            child: Divider(
+              thickness: 2,
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 }
