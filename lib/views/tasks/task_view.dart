@@ -47,9 +47,10 @@ class _TaskViewState extends State<TaskView> {
     }
   }
 
+  // Show selected Date as String
   String showDate(DateTime? date) {
     if (widget.task?.createdAtDate == null) {
-      if (time == null) {
+      if (date == null) {
         return DateFormat.yMMMEd().format(DateTime.now()).toString();
       } else {
         return DateFormat.yMMMEd().format(date!).toString();
@@ -250,12 +251,12 @@ class _TaskViewState extends State<TaskView> {
                           onChange: (_, __) {},
                           initDateTime: showDateAsDateTime(time),
                           dateFormat: 'HH:mm',
-                          onConfirm: (dateTime, _) {
+                          onConfirm: (selectedTime, _) {
                             setState(() {
                               if (widget.task?.createdAtTime == null) {
-                                time = dateTime;
+                                time = selectedTime;
                               } else {
-                                widget.task!.createdAtTime = dateTime;
+                                widget.task!.createdAtTime = selectedTime;
                               }
                             });
                           },
@@ -274,12 +275,12 @@ class _TaskViewState extends State<TaskView> {
                 maxDateTime: DateTime(2030, 9, 9),
                 minDateTime: DateTime.now(),
                 initialDateTime: showDateAsDateTime(date),
-                onConfirm: (dateTime, _) {
+                onConfirm: (selectedDate, _) {
                   setState(() {
                     if (widget.task?.createdAtDate == null) {
-                      time = dateTime;
+                      date = selectedDate;
                     } else {
-                      widget.task!.createdAtDate = dateTime;
+                      widget.task!.createdAtDate = selectedDate;
                     }
                   });
                 },
