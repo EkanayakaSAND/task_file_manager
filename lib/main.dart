@@ -14,13 +14,6 @@ Future<void> main() async {
   // Open a box
   Box box = await Hive.openBox<Task>(HiveDataStore.boxName);
 
-  // To delete task from previous day
-  // box.values.forEach((task) {
-  //   if (task.createdAtTime.day != DateTime.now().day) {
-  //     task.delete();
-  //   }
-  // });
-
   runApp(BaseWidget(child: const MyApp()));
 }
 
@@ -96,7 +89,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      //home: const TaskScreenView(),
       home: const TaskScreenView(),
     );
   }
