@@ -10,33 +10,16 @@ A simple user friendly task manager app built with Flutter that helps you organi
 
 ## Screenshots
 
-![Screenshot 1](screenshots/01.jpeg)
-*First Screen*
-
-
-<img src="screenshots/01.jpeg" alt="First Screen" width="200" />
-*First Screen*
-
-![Screenshot 1](screenshots/02.jpeg)
-*Add Task Screen*
-
-![Screenshot 1](screenshots/03.jpeg)
-*Task Edit and Delete Screen*
-
-![Screenshot 1](screenshots/04.jpeg)
-*Task Completion*
-
-![Screenshot 1](screenshots/05.jpeg)
-*Delete a task by swiping to side*
-
-![Screenshot 1](screenshots/06.jpeg)
-*Deleete all tasks warning*
-
-![Screenshot 1](screenshots/07.jpeg)
-*After completion of all tasks*
-
-![Screenshot 1](screenshots/08.jpeg)
-*Side bar*
+<div style="display: flex;width:100vw; justify-content: space-around; align-items: center;">
+    <img src="screenshots/01.jpeg" alt="First Screen" width="300" />
+    <img src="screenshots/02.jpeg" alt="First Screen" width="300" />
+    <img src="screenshots/03.jpeg" alt="First Screen" width="300" />
+    <img src="screenshots/04.jpeg" alt="First Screen" width="300" />
+    <img src="screenshots/05.jpeg" alt="First Screen" width="300" />
+    <img src="screenshots/06.jpeg" alt="First Screen" width="300" />
+    <img src="screenshots/07.jpeg" alt="First Screen" width="300" />
+    <img src="screenshots/08.jpeg" alt="First Screen" width="300" />
+</div>
 
 ## Getting Started
 
