@@ -13,6 +13,10 @@ A simple user friendly task manager app built with Flutter that helps you organi
 ![Screenshot 1](screenshots/01.jpeg)
 *First Screen*
 
+
+<img src="screenshots/01.jpeg" alt="First Screen" width="200" />
+*First Screen*
+
 ![Screenshot 1](screenshots/02.jpeg)
 *Add Task Screen*
 
