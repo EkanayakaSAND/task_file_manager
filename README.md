@@ -1,16 +1,68 @@
-# task_file_manager
+# Task Manager App
 
-A new Flutter project.
+A simple user friendly task manager app built with Flutter that helps you organize your tasks efficiently.
+
+## Features
+
+- Add, edit, and delete tasks
+- Mark tasks as complete
+- Set due dates for tasks
+
+## Screenshots
+
+![Screenshot 1](screenshots/01.jpeg)
+*First Screen*
+
+![Screenshot 1](screenshots/02.jpeg)
+*Add Task Screen*
+
+![Screenshot 1](screenshots/03.jpeg)
+*Task Edit and Delete Screen*
+
+![Screenshot 1](screenshots/04.jpeg)
+*Task Completion*
+
+![Screenshot 1](screenshots/05.jpeg)
+*Delete a task by swiping to side*
+
+![Screenshot 1](screenshots/06.jpeg)
+*Deleete all tasks warning*
+
+![Screenshot 1](screenshots/07.jpeg)
+*After completion of all tasks*
+
+![Screenshot 1](screenshots/08.jpeg)
+*Side bar*
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To get started with the app, follow these steps:
 
-A few resources to get you started if this is your first Flutter project:
+1. Clone this repository:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    git clone https://github.com/EkanayakaSAND/task_file_manager
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. Navigate to the project directory:
+
+    cd task-manager-app
+
+
+3. Install dependencies:
+
+    flutter pub get
+
+
+4. Run the app:
+
+    flutter run
+
+## Dependencies
+
+- [Flutter](https://flutter.dev/)
+- [Provider](https://pub.dev/packages/provider) for state management
+- [hive](https://hive.apache.org/) for local database
+
+## Acknowledgements
+
+  - This project was developed in the context of Faculty of Engineering, University of Ruhuna.
+  - This project was developed in collaboration with ACSENEVIRATHNA(https://github.com/ACSENEVIRATHNA).
